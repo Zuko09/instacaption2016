@@ -41,7 +41,7 @@
 
 </head>
 
-<body ng-app="app1" ng-controller="appController">
+<body id="body" ng-app="app1" ng-controller="appController">
 
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -72,7 +72,7 @@
                     <output id="list" style="overflow: hidden; overflow-y: hidden;"></output>
                 </div>
                 <div id="results"></div>
-
+                <div>Please go here and add this Chrome extension: <a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en">Allow-Control-Allow-Origin</a></div>
             </div>
 
             <!-- Where the caption will be printed? -->
@@ -147,6 +147,7 @@
                             var span = document.createElement('span');
                             span.innerHTML = ['<img class="thumb" src="', e.target.result,
                                 '" title="', escape(theFile.name), '"/>'].join('');
+<<<<<<< HEAD
                             span.height = 100;
                             span.width = 100;
                             document.getElementById('list').insertBefore(span, null);
@@ -180,6 +181,76 @@
                     // Read in the image file as a data URL.
                     reader.readAsDataURL(f);
                 }
+=======
+                        span.height = 100;
+                        span.width = 100;
+                        document.getElementById('list').insertBefore(span, null);
+
+
+                        var srcData;
+
+                        // Checking to see if image is .png or .jpeg
+                        if (reader.result.charAt(11) == 'j') {
+                            srcData = (reader.result).substring(23, reader.result.length);
+                        } else if (reader.result.charAt(11) == 'p') {
+                            srcData = (reader.result).substring(22, reader.result.length);
+                        }
+
+                        var app = new Clarifai.App(
+                            'wHIFmkeN4zK0u-9fbniBuBuRvr46iqH90Qm6TpHR', // id
+                            'oXH7OBXjkHkxUprD-1ldyof2Q29WU76xaAkeBLFw' // secret
+                        );
+                        
+
+                        app.models.predict(Clarifai.GENERAL_MODEL, {base64: srcData}).then(
+                            function (response) {
+                                var temp = [];
+                                var results = response["data"]["outputs"][0]["data"]["concepts"];
+                                for (i = 0; i < results.length; i++) {
+                                    temp.push(results[i]["name"]);
+                                }
+
+                                //console.log("I came from app.js");
+                                // 'http://api.lyricsnmusic.com/songs?api_key=e64c151037a51ee6eec671e3020a46&lyrics=Trains%20railways'
+                                var urlTags = "http://api.lyricsnmusic.com/songs?api_key=e64c151037a51ee6eec671e3020a46&lyrics=" + temp[0];
+                                for(i=1; i < 4; i++) {
+                                    //console.log(temp[i]);
+                                    urlTags += "%20" + temp[i];
+                                }    
+                                urlTags = urlTags.replace(/\s+/g, '')
+
+                                //console.log(urlTags);
+                                var justTheTags = [];
+                                $.getJSON(urlTags, function(data) {
+                                    //data is the JSON string
+                                    for(i=0; i < data.length; i++) {
+                                        //console.log(data[i]["snippet"]);
+                                        justTheTags.push(data[i]["snippet"]);
+                                    }
+                                    console.log( justTheTags);
+                                    $scope.$apply(function() {
+                                        $scope.tags = justTheTags;
+                                        console.log($scope.tags);
+                                    });
+                                });
+                                
+                                var appElement = document.querySelector('[ng-app=app1]');
+                                var $scope = angular.element(appElement).scope();
+                                console.log(justTheTags);
+                                
+                                
+                                
+                            },
+                            function (err) {
+                                console.error(err);
+                            }
+                        );
+                    };
+                })(f);
+
+                // Read in the image file as a data URL.
+                reader.readAsDataURL(f);
+>>>>>>> origin/master
             }
 
             document.getElementById('files').addEventListener('change', handleFileSelect, false);
