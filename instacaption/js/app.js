@@ -42,8 +42,10 @@
                 var temp = [];
                 var results = response["data"]["outputs"][0]["data"]["concepts"];
                 for(i=0; i< results.length; i++) {
-                    temp.push(results[i]["name"]);
+                    temp.push({results[i]["name"], results[i]["value"]});
                 }
+
+
                 //console.log(tags);
                 $scope.$apply(function() {
                     $scope.tags = temp;
