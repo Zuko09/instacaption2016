@@ -147,41 +147,7 @@
                             var span = document.createElement('span');
                             span.innerHTML = ['<img class="thumb" src="', e.target.result,
                                 '" title="', escape(theFile.name), '"/>'].join('');
-<<<<<<< HEAD
-                            span.height = 100;
-                            span.width = 100;
-                            document.getElementById('list').insertBefore(span, null);
 
-
-                            //var srcData = btoa(theFile.target.result);
-
-                            var app = new Clarifai.App(
-                                'wHIFmkeN4zK0u-9fbniBuBuRvr46iqH90Qm6TpHR', // id
-                                'oXH7OBXjkHkxUprD-1ldyof2Q29WU76xaAkeBLFw' // secret
-                            );
-                            app.models.predict(Clarifai.GENERAL_MODEL, "https://samples.clarifai.com/metro-north.jpg").then(
-                                function (response) {
-                                    var temp = [];
-                                    var results = response["data"]["outputs"][0]["data"]["concepts"];
-                                    for (i = 0; i < results.length; i++) {
-                                        temp.push(results[i]["name"]);
-                                    }
-                                    console.log(tags);
-                                    $scope.$apply(function () {
-                                        $scope.tags = temp;
-                                    });
-                                },
-                                function (err) {
-                                    console.error(err);
-                                }
-                            );
-                        };
-                    })(f);
-
-                    // Read in the image file as a data URL.
-                    reader.readAsDataURL(f);
-                }
-=======
                         span.height = 100;
                         span.width = 100;
                         document.getElementById('list').insertBefore(span, null);
@@ -250,7 +216,6 @@
 
                 // Read in the image file as a data URL.
                 reader.readAsDataURL(f);
->>>>>>> origin/master
             }
 
             document.getElementById('files').addEventListener('change', handleFileSelect, false);
