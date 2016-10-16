@@ -3,14 +3,9 @@
 
     // CLARIFAI HERE
     var app = new Clarifai.App(
-    'wHIFmkeN4zK0u-9fbniBuBuRvr46iqH90Qm6TpHR',
-    'oXH7OBXjkHkxUprD-1ldyof2Q29WU76xaAkeBLFw'
+    'wHIFmkeN4zK0u-9fbniBuBuRvr46iqH90Qm6TpHR', // id
+    'oXH7OBXjkHkxUprD-1ldyof2Q29WU76xaAkeBLFw'  // secret
     );
-
-
-
-
-
 
     // ANGULAR STARTS HERE
     angular.module('app1', [])
@@ -18,27 +13,48 @@
 
     appController.$inject = ['$scope'];
     function appController($scope) {
+        $scope.frontImage = "img/canoe.jpg";
         $scope.tags = [];
         // predict the contents of an image by passing in a url
+        $scope.image = "https://samples.clarifai.com/metro-north.jpg";
+        //$scope.image = "img/canoe.jpg";
 
-        app.models.predict(Clarifai.GENERAL_MODEL, 'https://samples.clarifai.com/metro-north.jpg').then(
-        function(response) {
-            var temp = [];
-            var results = response["data"]["outputs"][0]["data"]["concepts"];
-            for(i=0; i< results.length; i++) {
-                temp.push(results[i]["name"]);
-            }
-            //console.log(tags);
-            $scope.$apply(function() {
-                $scope.tags = temp;
-            });
-            console.log(($scope.description));
-        },
-            function(err) {
-                console.error(err);
-            }
-        );
+        $scope.loadImageFileAsURL = function(){
+            console.log("hey");
+            // NAME INPUT BOX 'inputFileToLoad'
+            var filesSelected = document.getElementById("inputFileToLoad").files;
+            if (filesSelected.length > 0){
+                var fileToLoad = filesSelected[0];
 
+                var srcData = fileToLoad.target.result; // <--- data: base64
+                console.log("srcData");
+
+                var divTest = document.getElementById("frontImage");
+
+                divTest.src = srcData;
+
+            }
+        }
+        // file =>
+        $scope.searchImage = function(image) {
+            app.models.predict(Clarifai.GENERAL_MODEL, image).then(
+            function(response) {
+                var temp = [];
+                var results = response["data"]["outputs"][0]["data"]["concepts"];
+                for(i=0; i< results.length; i++) {
+                    temp.push(results[i]["name"]);
+                }
+                //console.log(tags);
+                $scope.$apply(function() {
+                    $scope.tags = temp;
+                });
+            },
+                function(err) {
+                    console.error(err);
+                }
+            );
+        }
+        $scope.searchImage($scope.image);
 
     }
 })()
