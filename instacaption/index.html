@@ -79,7 +79,7 @@
                     <output id="list" style="overflow: hidden; overflow-y: hidden;"></output>
                 </div>
                 <div id="results"></div>
-
+                <div>Please go here and add this Chrome extension: <a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en">Allow-Control-Allow-Origin</a></div>
             </div>
 
             <!-- Where the caption will be printed? -->
@@ -144,7 +144,14 @@
                         document.getElementById('list').insertBefore(span, null);
 
 
-                        var srcData = (reader.result).substring(23, reader.result.length);
+                        var srcData;
+
+                        // Checking to see if image is .png or .jpeg
+                        if (reader.result.charAt(11) == 'j') {
+                            srcData = (reader.result).substring(23, reader.result.length);
+                        } else if (reader.result.charAt(11) == 'p') {
+                            srcData = (reader.result).substring(22, reader.result.length);
+                        }
 
                         var app = new Clarifai.App(
                             'wHIFmkeN4zK0u-9fbniBuBuRvr46iqH90Qm6TpHR', // id
