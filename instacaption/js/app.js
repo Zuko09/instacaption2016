@@ -13,6 +13,7 @@
 
     appController.$inject = ['$scope'];
     function appController($scope) {
+        $scope.addOnAddress = "https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi/related?hl=en-US";
         $scope.frontImage = "img/canoe.jpg";
         $scope.tags = [];
         // predict the contents of an image by passing in a url
@@ -40,17 +41,20 @@
             app.models.predict(Clarifai.GENERAL_MODEL, image).then(
             function(response) {
                 var temp = [];
+                var values =[];
                 var results = response["data"]["outputs"][0]["data"]["concepts"];
                 for(i=0; i< results.length; i++) {
                     temp.push(results[i]["name"]);
+                    values.push(results[i]["value"]);
                 }
-
 
 
                 //console.log(tags);
                 $scope.$apply(function() {
                     $scope.tags = temp;
                 });
+
+                
             },
                 function(err) {
                     console.error(err);
