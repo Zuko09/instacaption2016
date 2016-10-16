@@ -14,31 +14,54 @@ img {
 }
 
 .captions {
-    max-height: 65rem;
+    min-height: 65rem;
     height: 100%;
     overflow-y: scroll;
     padding-right: 20px;
+}
+
+.box {
+    background: #fafafa;
+    cursor: pointer;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    transition: background .2s linear, border-radius 1s ease-in 1s;
+    width: 100%;
+    border-top: 1px solid #BDBDBD;
+}
+
+.box:hover {
+    background: #f2f2f2;
+}
+
+.box:active {
+    background: #455A64;
+    color: #fafafa;
 }
 
 .drop_zone {
     min-height: 70rem;
     border: 2px solid #BDBDBD;
     /* rgba(0, 0, 0, 0.3); */
-    border-radius: 25px;
+    border-radius: 15px;
     background: #f2f2f2;
-    padding: 54px 54px;
+    padding: 44px 44px;
 }
 
-.drop_zone p {
+.drop_zone input {
     margin: 0;
     position: absolute;
     font-family: 'Open Sans', sans-serif;
     color: lightslategrey;
-    font-size: 25px;
-    top: 50%;
-    left: 50%;
+    font-size: 15px;
+    left: 55%;
     margin-right: -50%;
     transform: translate(-50%, -50%)
+}
+
+::-webkit-scrollbar {
+    display: none;
 }
 
 
