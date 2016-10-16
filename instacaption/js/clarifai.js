@@ -1,10 +1,6 @@
 
 // The JavaScript client works in both Node.js and the browser.
 
-
-// Install the client from NPM
-npm install clarifai
-
 // Require the client
 var Clarifai = require('clarifai');
 
@@ -14,12 +10,14 @@ var app = new Clarifai.App(
   'oXH7OBXjkHkxUprD-1ldyof2Q29WU76xaAkeBLFw'
 );
 
+var image = 'https://samples.clarifai.com/metro-north.jpg';
 
-app.models.predict(Clarifai.GENERAL_MODEL, 'https://samples.clarifai.com/metro-north.jpg').then(
-  function(response) {
-    console.log(response);
-  },
-  function(err) {
-    console.error(err);
-  }
-);
+function predictImage(link) {
+    app.models.predict(Clarifai.GENERAL_MODEL, link).then(
+      function(response) {
+        console.log(response);
+      },
+      function(err) {
+        console.error(err);
+    });
+}
