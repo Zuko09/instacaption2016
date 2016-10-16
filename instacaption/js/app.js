@@ -45,6 +45,8 @@
                     temp.push(results[i]["name"]);
                 }
 
+
+
                 //console.log(tags);
                 $scope.$apply(function() {
                     $scope.tags = temp;

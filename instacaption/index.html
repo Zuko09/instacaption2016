@@ -144,39 +144,6 @@
                         document.getElementById('list').insertBefore(span, null);
 
 
-                        var bucket = new AWS.S3({
-                            params: {
-                                Bucket: 'myBucket'
-                            }
-                        });
-
-                        var results = document.getElementById('results');
-                        var file = theFile;
-                        if (file) {
-                            results.innerHTML = '';
-
-                            var params = {
-                                Key: file.name,
-                                ContentType: file.type,
-                                Body: file
-                            };
-
-                            bucket.upload(params, function (err, data) {
-                                console.log("Uploaded!")
-                                results.innerHTML = err ? 'ERROR!' : 'UPLOADED.';
-                            });
-                        } else {
-                            results.innerHTML = 'Nothing to upload.';
-                        }
-                        var params = {
-                            Bucket: 'myBucket'
-                        };
-                        console.log(bucket);
-                        bucket.getSignedUrl('getObject', params, function (err, url) {
-                            console.log("The URL is", url);
-
-                        });
-
                         //var srcData = btoa(theFile.target.result);
 
                         var app = new Clarifai.App(
