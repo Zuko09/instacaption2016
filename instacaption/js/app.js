@@ -44,7 +44,6 @@
                 for(i=0; i< results.length; i++) {
                     temp.push(results[i]["name"]);
                 }
-                for()
 
                 //console.log(tags);
                 $scope.$apply(function() {
