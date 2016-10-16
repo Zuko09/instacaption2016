@@ -17,8 +17,7 @@
     <!-- Custom CSS -->
     <link href="css/style.css" rel="stylesheet">
     <link href="css/portfolio-item.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Damion|Pacifico" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Pacifico|Open+Sans|Raleway|Montserrat" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -29,8 +28,6 @@
 
     <!-- JS -->
     <script type="text/javascript" src="https://sdk.clarifai.com/js/clarifai-2.0.9.js"></script>
-    <script src="js/dropzone.js"></script>
-    <script src="js/enscroll-0.6.2.min.js"></script>
 
     <!-- AngularJS -->
     <script src="js/angular.js"></script>
@@ -39,10 +36,12 @@
     <!-- AWS -->
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.6.9.min.js"></script>
     <script type="text/javascript">
-      // See the Configuring section to configure credentials in the SDK
+        // See the Configuring section to configure credentials in the SDK
 
-      var config = new AWS.Config({
-          accessKeyId: 'AKIAJMJR2IWIIVJWWA3A', secretAccessKey: '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', region: 'us-west-2'
+        var config = new AWS.Config({
+            accessKeyId: 'AKIAJMJR2IWIIVJWWA3A',
+            secretAccessKey: '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',
+            region: 'us-west-2'
         });
     </script>
 
@@ -73,13 +72,13 @@
 
 
     <!-- Page Content -->
-    <div class="container">
+    <div class="container content">
 
         <!-- Portfolio Item Row -->
         <div class="row">
 
             <div class="col-md-8">
-                <div class="drop_zone" >
+                <div class="drop_zone">
                     <input type="file" id="files" onclick="clearImage()" name="files[]" multiple />
                     <p></p>
                     <output id="list" style="overflow: hidden; overflow-y: hidden;"></output>
@@ -89,9 +88,15 @@
             </div>
 
             <!-- Where the caption will be printed? -->
+            <div class="col-md-4" style="margin-top: -30px;">
+                <h3 class="navbar-header">Captions</h3>
+            </div>
             <div class="col-md-4 pre-scrollable captions">
-                <h3>Project Description</h3>
-                <p ng-repeat="tag in tags track by $index">{{tag}}</p>
+                <div ng-repeat="tag in tags track by $index">
+                    <p>{{tag}}</p>
+                    <hr style="border-top: 1px solid #BDBDBD;">
+                </div>
+                <!-- <p ng-repeat="tag in tags track by $index">{{tag}}</p> -->
             </div>
 
         </div>
@@ -119,92 +124,102 @@
     <script src="js/bootstrap.min.js"></script>
 
     <script>
-      function handleFileSelect(evt) {
-        var files = evt.target.files; // FileList object
+        function handleFileSelect(evt) {
+            var files = evt.target.files; // FileList object
 
-        // Loop through the FileList and render image files as thumbnails.
-        for (var i = 0, f; f = files[i]; i++) {
+            // Loop through the FileList and render image files as thumbnails.
+            for (var i = 0, f; f = files[i]; i++) {
 
-          // Only process image files.
-          if (!f.type.match('image.*')) {
-            continue;
-          }
-
-          var reader = new FileReader();
-
-          // Closure to capture the file information.
-          reader.onload = (function(theFile) {
-            return function(e) {
-              // Render thumbnail.
-              var span = document.createElement('span');
-              span.innerHTML = ['<img class="thumb" src="', e.target.result,
-                                '" title="', escape(theFile.name), '"/>'].join('');
-              span.height = 100;
-              span.width = 100;
-              document.getElementById('list').insertBefore(span, null);
-
-
-              var bucket = new AWS.S3({params: {Bucket: 'myBucket'}});
-
-              var results = document.getElementById('results');
-              var file = theFile;
-              if (file) {
-                  results.innerHTML = '';
-
-                  var params = {Key: file.name, ContentType: file.type, Body: file};
-
-                  bucket.upload(params, function (err, data) {
-                      console.log("Uploaded!")
-                    results.innerHTML = err ? 'ERROR!' : 'UPLOADED.';
-                  });
-                } else {
-                  results.innerHTML = 'Nothing to upload.';
+                // Only process image files.
+                if (!f.type.match('image.*')) {
+                    continue;
                 }
-                var params = {Bucket: 'myBucket'};
-                console.log(bucket);
-                bucket.getSignedUrl('getObject', params, function (err, url) {
-                    console.log("The URL is", url);
 
-                });
+                var reader = new FileReader();
 
-              //var srcData = btoa(theFile.target.result);
+                // Closure to capture the file information.
+                reader.onload = (function (theFile) {
+                    return function (e) {
+                        // Render thumbnail.
+                        var span = document.createElement('span');
+                        span.innerHTML = ['<img class="thumb" src="', e.target.result,
+                                '" title="', escape(theFile.name), '"/>'].join('');
+                        span.height = 100;
+                        span.width = 100;
+                        document.getElementById('list').insertBefore(span, null);
 
-              var app = new Clarifai.App(
-              'wHIFmkeN4zK0u-9fbniBuBuRvr46iqH90Qm6TpHR', // id
-              'oXH7OBXjkHkxUprD-1ldyof2Q29WU76xaAkeBLFw'  // secret
-              );
-              app.models.predict(Clarifai.GENERAL_MODEL, "https://samples.clarifai.com/metro-north.jpg").then(
-                  function(response) {
-                      var temp = [];
-                      var results = response["data"]["outputs"][0]["data"]["concepts"];
-                      for(i=0; i< results.length; i++) {
-                          temp.push(results[i]["name"]);
-                      }
-                      console.log(tags);
-                      $scope.$apply(function() {
-                          $scope.tags = temp;
-                      });
-                  },
-                      function(err) {
-                          console.error(err);
-                      }
-                  );
-            };
-          })(f);
 
-          // Read in the image file as a data URL.
-          reader.readAsDataURL(f);
+                        var bucket = new AWS.S3({
+                            params: {
+                                Bucket: 'myBucket'
+                            }
+                        });
+
+                        var results = document.getElementById('results');
+                        var file = theFile;
+                        if (file) {
+                            results.innerHTML = '';
+
+                            var params = {
+                                Key: file.name,
+                                ContentType: file.type,
+                                Body: file
+                            };
+
+                            bucket.upload(params, function (err, data) {
+                                console.log("Uploaded!")
+                                results.innerHTML = err ? 'ERROR!' : 'UPLOADED.';
+                            });
+                        } else {
+                            results.innerHTML = 'Nothing to upload.';
+                        }
+                        var params = {
+                            Bucket: 'myBucket'
+                        };
+                        console.log(bucket);
+                        bucket.getSignedUrl('getObject', params, function (err, url) {
+                            console.log("The URL is", url);
+
+                        });
+
+                        //var srcData = btoa(theFile.target.result);
+
+                        var app = new Clarifai.App(
+                            'wHIFmkeN4zK0u-9fbniBuBuRvr46iqH90Qm6TpHR', // id
+                            'oXH7OBXjkHkxUprD-1ldyof2Q29WU76xaAkeBLFw' // secret
+                        );
+                        app.models.predict(Clarifai.GENERAL_MODEL, "https://samples.clarifai.com/metro-north.jpg").then(
+                            function (response) {
+                                var temp = [];
+                                var results = response["data"]["outputs"][0]["data"]["concepts"];
+                                for (i = 0; i < results.length; i++) {
+                                    temp.push(results[i]["name"]);
+                                }
+                                console.log(tags);
+                                $scope.$apply(function () {
+                                    $scope.tags = temp;
+                                });
+                            },
+                            function (err) {
+                                console.error(err);
+                            }
+                        );
+                    };
+                })(f);
+
+                // Read in the image file as a data URL.
+                reader.readAsDataURL(f);
+            }
         }
-      }
 
-      document.getElementById('files').addEventListener('change', handleFileSelect, false);
+        document.getElementById('files').addEventListener('change', handleFileSelect, false);
 
-      function clearImage() {
-          var node = document.getElementById('list');
-          while (node.hasChildNodes()) {
-              node.removeChild(node.lastChild);
-          }
-      }
+        function clearImage() {
+            var node = document.getElementById('list');
+            while (node.hasChildNodes()) {
+                node.removeChild(node.lastChild);
+            }
+        }
     </script>
 
 </body>
