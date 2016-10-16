@@ -144,20 +144,22 @@
                         document.getElementById('list').insertBefore(span, null);
 
 
-                        //var srcData = btoa(theFile.target.result);
+                        var srcData = (reader.result).substring(23, reader.result.length);
 
                         var app = new Clarifai.App(
                             'wHIFmkeN4zK0u-9fbniBuBuRvr46iqH90Qm6TpHR', // id
                             'oXH7OBXjkHkxUprD-1ldyof2Q29WU76xaAkeBLFw' // secret
                         );
-                        app.models.predict(Clarifai.GENERAL_MODEL, "https://samples.clarifai.com/metro-north.jpg").then(
+                        app.models.predict(Clarifai.GENERAL_MODEL, {base64: srcData}).then(
                             function (response) {
                                 var temp = [];
                                 var results = response["data"]["outputs"][0]["data"]["concepts"];
                                 for (i = 0; i < results.length; i++) {
                                     temp.push(results[i]["name"]);
                                 }
-                                console.log(tags);
+                                console.log("hello")
+
+                                console.log(temp);
                                 $scope.$apply(function () {
                                     $scope.tags = temp;
                                 });
